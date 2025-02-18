@@ -1,7 +1,7 @@
 ***Goals***
-1. Develop a seudo-API which can do the methods GET, POST, PUT and DELETE.
+1. Develop a seudo-API which can perfom GET, POST, PUT and DELETE methods.
 2. Save the data in a MySQL databse.
-3. Show data in front-end.
+3. Show the data in the front-end.
 
 ***Tools used***
 - PHP
