@@ -18,11 +18,54 @@
             </div>
             <div>
                 <label for="developer">Developer</label>
-                <input type="text" name="developer" id="developer" required>
+                <select name="existing_developers" id="developers_select">
+                    <option value="1">Example</option>
+                    <option value="2">Hola</option>
+                </select>
+                <input type="text" name="developer" id="developer" placeholder="Ex. Mojang" required>
+            </div>
+            <div>
+                <label for="publisher">Publisher</label>
+                <select name="existing_publishers" id="publishers_select">
+                    <option value="1">Example</option>
+                    <option value="2">Hola</option>
+                </select>
+                <input type="text" name="publisher" id="publisher" required>
+            </div>
+            <div>
+                <label for="release">Released date</label>
+                <input type="date" name="release" id="release" required>
             </div>
             <div>
                 <label for="price">Price</label>
                 <input type="number" name="price" id="price" required>
+            </div>
+            <div>
+                <label for="duration">Duration</label>
+                <input type="text" name="duration" id="duration" required>
+            </div>
+            <div>
+                <label for="difficult">Difficult</label>
+                <select name="existing_difficulties" id="difficulties_select">
+                    <option value="1">Example</option>
+                    <option value="2">Hola</option>
+                </select>
+            </div>
+            <div>
+                <label for="platform">Platforms</label>
+                <select name="existing_platforms" id="platforms_select">
+                    <option value="1">Example</option>
+                    <option value="2">Hola</option>
+                </select>
+                <input type="text" name="platform" id="platform" required>
+            </div>
+            <div>
+                <label for="gender">Genders</label>
+                <select name="existing_genders" id="genders_select">
+                    <option value="1">Example</option>
+                    <option value="2">Hola</option>
+                </select>
+                <input type="text" name="gender" id="gender" required>
             </div>
             <button type="submit">Submit</button>
         </form>

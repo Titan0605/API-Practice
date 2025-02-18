@@ -4,7 +4,7 @@
         // header("Accept-Charset: UTF-8");
         // header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
 
-        include 'DB_Connection.php'; // Include the database connection file
+        require_once '../src/config/db.php'; // Include the database connection file
         
         // Function to handle videogames data
         function getVideogames(){
@@ -16,16 +16,26 @@
             switch($server){
                 case "GET":
                     // Handle GET request
-                    // LAST VERSION - USING DATABASE
                     $videogames = []; // Array to store videogames data
-                    $query = "SELECT * FROM videojuegos"; // SQL query to get all videogames
+                    $query = "SELECT * FROM tvideogames"; // SQL query to get all videogames
 
-                    $result = $conn -> query($query); // Execute the query
-                    foreach($result as $row){
-                        $videogames[] = $row;
-                    } // Fetch all rows as an associative array
-                    echo json_encode($videogames); // Return videogames data as JSON
-                    break;
+                    try {
+                        $result = $conn -> query($query); // Execute the query
+                        foreach($result as $row){
+                            $videogames[] = $row;
+                        } // Fetch all rows as an associative array
+
+                        if ($videogames === []){ //Return a message if there are not data
+                            echo json_encode("There are not data");
+                            break;
+                        } 
+
+                        echo json_encode($videogames); // Return videogames data as JSON
+                        break;
+                    } catch(PDOException $e) {
+                        echo "Fetch failed" . $e -> getMessage();
+                    }
+                    
                 case "POST":
                     // Handle POST request
                     $nombre = $_POST['tittle'];
