@@ -32,6 +32,7 @@
 
                         echo json_encode($videogames); // Return videogames data as JSON
                         break;
+
                     } catch(PDOException $e) {
                         echo "Fetch failed" . $e -> getMessage();
                     }
