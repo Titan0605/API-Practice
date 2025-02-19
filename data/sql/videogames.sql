@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-02-2025 a las 18:01:36
+-- Tiempo de generación: 19-02-2025 a las 05:09:07
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -30,8 +30,15 @@ SET time_zone = "+00:00";
 CREATE TABLE `tdevelopers` (
   `id_developer` int(11) NOT NULL,
   `developer_name` varchar(255) NOT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tdevelopers`
+--
+
+INSERT INTO `tdevelopers` (`id_developer`, `developer_name`, `active`) VALUES
+(1, 'Nintendo', 1);
 
 -- --------------------------------------------------------
 
@@ -40,10 +47,17 @@ CREATE TABLE `tdevelopers` (
 --
 
 CREATE TABLE `tdifficulties` (
-  `id_difficult` int(11) NOT NULL,
+  `id_difficulty` int(11) NOT NULL,
   `difficult_description` varchar(255) NOT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tdifficulties`
+--
+
+INSERT INTO `tdifficulties` (`id_difficulty`, `difficult_description`, `active`) VALUES
+(1, 'Medium', 1);
 
 -- --------------------------------------------------------
 
@@ -55,8 +69,17 @@ CREATE TABLE `tgame_genders` (
   `id_game_gender` int(11) NOT NULL,
   `id_videogame` int(11) DEFAULT NULL,
   `id_gender` int(11) DEFAULT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tgame_genders`
+--
+
+INSERT INTO `tgame_genders` (`id_game_gender`, `id_videogame`, `id_gender`, `active`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 1, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -68,8 +91,16 @@ CREATE TABLE `tgame_platforms` (
   `id_game_platform` int(11) NOT NULL,
   `id_videogame` int(11) DEFAULT NULL,
   `id_platform` int(11) DEFAULT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tgame_platforms`
+--
+
+INSERT INTO `tgame_platforms` (`id_game_platform`, `id_videogame`, `id_platform`, `active`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -80,8 +111,17 @@ CREATE TABLE `tgame_platforms` (
 CREATE TABLE `tgenders` (
   `id_gender` int(11) NOT NULL,
   `gender_description` varchar(255) NOT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tgenders`
+--
+
+INSERT INTO `tgenders` (`id_gender`, `gender_description`, `active`) VALUES
+(1, 'Accion-Aventura', 1),
+(2, 'Mundo Abierto', 1),
+(3, 'RPG', 1);
 
 -- --------------------------------------------------------
 
@@ -92,20 +132,35 @@ CREATE TABLE `tgenders` (
 CREATE TABLE `tplatforms` (
   `id_platform` int(11) NOT NULL,
   `platform_name` varchar(255) NOT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tplatforms`
+--
+
+INSERT INTO `tplatforms` (`id_platform`, `platform_name`, `active`) VALUES
+(1, 'Nintendo Switch', 1),
+(2, 'Wii U', 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tpublisher`
+-- Estructura de tabla para la tabla `tpublishers`
 --
 
-CREATE TABLE `tpublisher` (
+CREATE TABLE `tpublishers` (
   `id_publisher` int(11) NOT NULL,
   `publisher_name` varchar(255) NOT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tpublishers`
+--
+
+INSERT INTO `tpublishers` (`id_publisher`, `publisher_name`, `active`) VALUES
+(1, 'Nintendo', 1);
 
 -- --------------------------------------------------------
 
@@ -121,9 +176,16 @@ CREATE TABLE `tvideogames` (
   `release_date` date DEFAULT NULL,
   `price` double NOT NULL,
   `time_to_finish` int(11) DEFAULT NULL,
-  `id_difficult` int(11) DEFAULT NULL,
-  `activate` tinyint(1) DEFAULT 1
+  `id_difficulty` int(11) DEFAULT NULL,
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tvideogames`
+--
+
+INSERT INTO `tvideogames` (`id_videogame`, `tittle`, `id_developer`, `id_publisher`, `release_date`, `price`, `time_to_finish`, `id_difficulty`, `active`) VALUES
+(1, 'The Legend of Zelda: Breath of the Wild', 1, 1, '2017-03-03', 59.99, 50, 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -133,13 +195,15 @@ CREATE TABLE `tvideogames` (
 -- Indices de la tabla `tdevelopers`
 --
 ALTER TABLE `tdevelopers`
-  ADD PRIMARY KEY (`id_developer`);
+  ADD PRIMARY KEY (`id_developer`),
+  ADD UNIQUE KEY `unique_developer` (`developer_name`);
 
 --
 -- Indices de la tabla `tdifficulties`
 --
 ALTER TABLE `tdifficulties`
-  ADD PRIMARY KEY (`id_difficult`);
+  ADD PRIMARY KEY (`id_difficulty`),
+  ADD UNIQUE KEY `unique_difficulty` (`difficult_description`);
 
 --
 -- Indices de la tabla `tgame_genders`
@@ -161,19 +225,22 @@ ALTER TABLE `tgame_platforms`
 -- Indices de la tabla `tgenders`
 --
 ALTER TABLE `tgenders`
-  ADD PRIMARY KEY (`id_gender`);
+  ADD PRIMARY KEY (`id_gender`),
+  ADD UNIQUE KEY `unique_gender` (`gender_description`);
 
 --
 -- Indices de la tabla `tplatforms`
 --
 ALTER TABLE `tplatforms`
-  ADD PRIMARY KEY (`id_platform`);
+  ADD PRIMARY KEY (`id_platform`),
+  ADD UNIQUE KEY `unique_platform` (`platform_name`);
 
 --
--- Indices de la tabla `tpublisher`
+-- Indices de la tabla `tpublishers`
 --
-ALTER TABLE `tpublisher`
-  ADD PRIMARY KEY (`id_publisher`);
+ALTER TABLE `tpublishers`
+  ADD PRIMARY KEY (`id_publisher`),
+  ADD UNIQUE KEY `unique_publisher` (`publisher_name`);
 
 --
 -- Indices de la tabla `tvideogames`
@@ -184,7 +251,7 @@ ALTER TABLE `tvideogames`
   ADD KEY `idx_developer` (`id_developer`),
   ADD KEY `idx_publisher` (`id_publisher`),
   ADD KEY `idx_release_date` (`release_date`),
-  ADD KEY `idx_difficult` (`id_difficult`);
+  ADD KEY `idx_difficult` (`id_difficulty`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -194,49 +261,49 @@ ALTER TABLE `tvideogames`
 -- AUTO_INCREMENT de la tabla `tdevelopers`
 --
 ALTER TABLE `tdevelopers`
-  MODIFY `id_developer` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_developer` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tdifficulties`
 --
 ALTER TABLE `tdifficulties`
-  MODIFY `id_difficult` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_difficulty` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tgame_genders`
 --
 ALTER TABLE `tgame_genders`
-  MODIFY `id_game_gender` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_game_gender` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tgame_platforms`
 --
 ALTER TABLE `tgame_platforms`
-  MODIFY `id_game_platform` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_game_platform` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tgenders`
 --
 ALTER TABLE `tgenders`
-  MODIFY `id_gender` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_gender` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tplatforms`
 --
 ALTER TABLE `tplatforms`
-  MODIFY `id_platform` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_platform` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `tpublisher`
+-- AUTO_INCREMENT de la tabla `tpublishers`
 --
-ALTER TABLE `tpublisher`
-  MODIFY `id_publisher` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tpublishers`
+  MODIFY `id_publisher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tvideogames`
 --
 ALTER TABLE `tvideogames`
-  MODIFY `id_videogame` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_videogame` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
@@ -261,8 +328,8 @@ ALTER TABLE `tgame_platforms`
 --
 ALTER TABLE `tvideogames`
   ADD CONSTRAINT `tvideogames_ibfk_1` FOREIGN KEY (`id_developer`) REFERENCES `tdevelopers` (`id_developer`),
-  ADD CONSTRAINT `tvideogames_ibfk_2` FOREIGN KEY (`id_publisher`) REFERENCES `tpublisher` (`id_publisher`),
-  ADD CONSTRAINT `tvideogames_ibfk_3` FOREIGN KEY (`id_difficult`) REFERENCES `tdifficulties` (`id_difficult`);
+  ADD CONSTRAINT `tvideogames_ibfk_2` FOREIGN KEY (`id_publisher`) REFERENCES `tpublishers` (`id_publisher`),
+  ADD CONSTRAINT `tvideogames_ibfk_3` FOREIGN KEY (`id_difficulty`) REFERENCES `tdifficulties` (`id_difficulty`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
