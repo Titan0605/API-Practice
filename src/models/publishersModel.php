@@ -1,5 +1,5 @@
 <?php
-    require_once "../config/db.php";
+    include "../config/db.php";
 
     class PublisherModel {
         private $conn;

@@ -1,6 +1,6 @@
 <?php
-    require_once "../config/db.php";
-    require_once "../models";
+    include "../src/config/db.php";
+    require_once "../src/models";
 
     class VideogameModel {
         private $conn;
@@ -35,7 +35,7 @@
                     $genders = [];
                     $platforms = [];
 
-                    $gameWithAllInfo = [];
+                    $gamesWithAllInfo = [];
 
                     $gendersIds = $this -> conn -> prepare($selectVideogameGenders);
                     $gendersIds -> execute([
@@ -71,10 +71,15 @@
                     $game['genders'] = $genders;
                     $game['platforms'] = $platforms;
 
-                    $gameWithAllInfo[] = $game;
+                    $gamesWithAllInfo[] = $game;
                 } catch (Exception $e) {
                     echo "Error processing game ID {$gameId}: " . $e -> getMessage();
                 }
+            }
+            if($gamesWithAllInfo === []){
+                echo "There are not Data";
+            } else {
+                return $gamesWithAllInfo;
             }
         }
 
