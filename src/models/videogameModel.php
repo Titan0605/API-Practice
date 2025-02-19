@@ -1,6 +1,10 @@
 <?php
-    include "../src/config/db.php";
-    require_once "../src/models";
+    require_once "../src/config/db.php";
+    require_once "../src/models/developersModel.php";
+    require_once "../src/models/difficultiesModel.php";
+    require_once "../src/models/gendersModel.php";
+    require_once "../src/models/platformsModel.php";
+    require_once "../src/models/publishersModel.php";
 
     class VideogameModel {
         private $conn;
@@ -25,6 +29,7 @@
             $selectVideogames = "SELECT * FROM tvideogames";
             $result = $this -> conn -> query($selectVideogames);
             $games = $result -> fetchAll(PDO::FETCH_ASSOC);
+            $gamesWithAllInfo = [];
 
             foreach($games as $game) {
                 try {
@@ -34,8 +39,6 @@
                     $difficulty = $this -> difficultyModel -> getDifficultyWithId($game['id_difficulty']);
                     $genders = [];
                     $platforms = [];
-
-                    $gamesWithAllInfo = [];
 
                     $gendersIds = $this -> conn -> prepare($selectVideogameGenders);
                     $gendersIds -> execute([
@@ -49,8 +52,8 @@
                     
                     foreach($gendersIds as $genderId){
                         try {
-                            $gender = $this -> genderModel -> getGenderWithId($genderId);
-                            $genders[] = $gender['gender_description'];
+                            $gender = $this -> genderModel -> getGenderWithId($genderId['id_gender']);
+                            $genders[] = $gender[0]['gender_description'];
                         } catch (Exception $e) {
                             echo "Error in SELECT: " , $e -> getMessage();
                         }
@@ -58,16 +61,16 @@
 
                     foreach($platformsIds as $platformId){
                         try {
-                            $platform = $this -> platformModel -> getPlatformWithId($platformId);
-                            $platforms[] = $platform['platform_name'];
+                            $platform = $this -> platformModel -> getPlatformWithId($platformId['id_platform']);
+                            $platforms[] = $platform[0]['platform_name'];
                         } catch (Exception $e) {
                             echo "Error in SELECT: " , $e -> getMessage();
                         }
                     }
 
-                    $game['developer'] = $developer['developer_name'];
-                    $game['publisher'] = $publisher['publisher_name'];
-                    $game['difficulty'] = $difficulty['difficult_description'];
+                    $game['developer'] = $developer[0]['developer_name'];
+                    $game['publisher'] = $publisher[0]['publisher_name'];
+                    $game['difficulty'] = $difficulty[0]['difficult_description'];
                     $game['genders'] = $genders;
                     $game['platforms'] = $platforms;
 
@@ -77,7 +80,8 @@
                 }
             }
             if($gamesWithAllInfo === []){
-                echo "There are not Data";
+                $gamesWithAllInfo[] = "There are not Data";
+                return $gamesWithAllInfo;
             } else {
                 return $gamesWithAllInfo;
             }

@@ -1,5 +1,5 @@
 <?php
-    include "../config/db.php";
+    require_once "../src/config/db.php";
 
     class GenderModel {
         private $conn;
@@ -31,7 +31,7 @@
         }
 
         public function getGenderWithId ($id) {
-            $query = "SELECT gender_description FROM tgenders WHERE id_developer = :id AND active = 1";
+            $query = "SELECT gender_description FROM tgenders WHERE id_gender = :id AND active = 1";
             try {
                 $result = $this -> conn -> prepare($query);
                 $result -> execute([
