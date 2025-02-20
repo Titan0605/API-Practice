@@ -88,7 +88,14 @@
         }
 
         public function insertVideogame() {
-
+            try {
+                $insertVideogame = "INSERT INTO tvideogames (tittle, id_developer, id_publisher, release_date, price, time_to_finish, id_difficulty)
+                                    VALUES (:tittle, :id_developer, :id_publisher, :release_date, :price, :time_to_finish, :id_difficulty)";
+                
+                
+            } catch(PDOException $e) {
+                echo "Error inserting the game: " . $e -> getMessage();
+            }
         }
     }
 ?>
