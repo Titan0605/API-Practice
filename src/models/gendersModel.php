@@ -1,5 +1,7 @@
 <?php
     require_once "../src/config/db.php";
+    require_once "../src/controllers/apiController.php";
+
 
     class GenderModel {
         private $conn;
@@ -14,19 +16,7 @@
                 $result = $this -> conn -> query($query);
                 return $result -> fetchAll(PDO::FETCH_ASSOC);
             } catch(PDOException $e) {
-                echo "Error in SELECT" . $e -> getMessage();
-            }
-        }
-
-        public function insertGender($genderDescription) {
-            $query = "INSERT INTO tgenders (gender_description) VALUES (:description)";
-            try {
-                $result = $this -> conn -> prepare($query);
-                $result -> execute([
-                    'description' => $genderDescription
-                ]);
-            } catch(PDOException $e) {
-                echo "Error in INSERT: " . $e -> getMessage();
+                APIResponse::serverError("Error in SELECT" . $e -> getMessage());
             }
         }
 
@@ -39,7 +29,19 @@
                 ]);
                 return $result -> fetch(PDO::FETCH_ASSOC);
             } catch(PDOException $e) {
-                echo "Error in SELECT" . $e -> getMessage();
+                APIResponse::serverError("Error in SELECT" . $e -> getMessage());
+            }
+        }
+
+        public function insertGender($genderDescription) {
+            $query = "INSERT INTO tgenders (gender_description) VALUES (:description)";
+            try {
+                $result = $this -> conn -> prepare($query);
+                $result -> execute([
+                    'description' => $genderDescription
+                ]);
+            } catch(PDOException $e) {
+                APIResponse::serverError("Error in INSERT" . $e -> getMessage());
             }
         }
     }

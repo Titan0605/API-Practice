@@ -5,6 +5,7 @@
     require_once "../src/models/gendersModel.php";
     require_once "../src/models/platformsModel.php";
     require_once "../src/models/publishersModel.php";
+    require_once "../src/controllers/apiController.php";
 
     class VideogameModel {
         private $conn;
@@ -55,7 +56,7 @@
                             $gender = $this -> genderModel -> getGenderWithId($genderId['id_gender']);
                             $genders[] = $gender['gender_description'];
                         } catch (Exception $e) {
-                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
+                            APIResponse::serverError("Error in SELECT: " , $e -> getMessage());
                         }
                     }
 
@@ -64,7 +65,7 @@
                             $platform = $this -> platformModel -> getPlatformWithId($platformId['id_platform']);
                             $platforms[] = $platform['platform_name'];
                         } catch (Exception $e) {
-                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
+                            APIResponse::serverError("Error in SELECT: " , $e -> getMessage());
                         }
                     }
 
@@ -73,17 +74,19 @@
                     $game['difficulty'] = $difficulty['difficult_description'];
                     $game['genders'] = $genders;
                     $game['platforms'] = $platforms;
+                    $game['active'] = (bool) $game['active'];
 
                     $gamesWithAllInfo[] = $game;
+
                 } catch (Exception $e) {
-                    return ['success' => false, 'message' => "Error processing game ID {$gameId}: " . $e -> getMessage()];
+                    APIResponse::serverError("Error processing game ID {$gameId}: " . $e -> getMessage());
                 }
             }
 
             if($gamesWithAllInfo === []){
-                return ['success' => false, 'message' => "There is no data"];
+                APIResponse::noContent("There is no data");
             } else {
-                return $gamesWithAllInfo;
+                APIResponse::success($gamesWithAllInfo);
             }
             
         }
@@ -103,7 +106,6 @@
 
             if ($game){
                 try {
-                    var_dump($game);
                     $gameId = $game['id_videogame'];
                     $developer = $this -> developerModel -> getDeveloperWithId($game['id_developer']);
                     $publisher = $this -> publisherModel -> getPublisherWithId($game['id_publisher']);
@@ -126,7 +128,7 @@
                             $gender = $this -> genderModel -> getGenderWithId($genderId['id_gender']);
                             $genders[] = $gender['gender_description'];
                         } catch (Exception $e) {
-                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
+                            APIResponse::serverError("Error in SELECT: " , $e -> getMessage());
                         }
                     }
 
@@ -135,7 +137,7 @@
                             $platform = $this -> platformModel -> getPlatformWithId($platformId['id_platform']);
                             $platforms[] = $platform['platform_name'];
                         } catch (Exception $e) {
-                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
+                            APIResponse::serverError("Error in SELECT: " , $e -> getMessage());
                         }
                     }
 
@@ -144,20 +146,21 @@
                     $game['difficulty'] = $difficulty['difficult_description'];
                     $game['genders'] = $genders;
                     $game['platforms'] = $platforms;
+                    $game['active'] = (bool) $game['active'];
 
                     $gamesWithAllInfo[] = $game;
                 } catch (Exception $e) {
-                    return ['success' => false, 'message' => "Error processing game ID {$gameId}: " . $e -> getMessage()];
+                    APIResponse::serverError("Error processing game ID {$gameId}: " . $e -> getMessage());
                 }
 
                 if($gamesWithAllInfo === []){
-                    return ['success' => false, 'message' => "There is no data"];
+                    APIResponse::noContent("There is no data");
                 } else {
-                    return $gamesWithAllInfo;
+                    APIResponse::success($gamesWithAllInfo);
                 }
 
             } else {
-                return ['success' => false, 'message' => "There is no videogame with the id: $id"];
+                APIResponse::noContent($game,'There is no videogame with the id: ' . $id);
             }
         }
         
@@ -168,8 +171,7 @@
                                     VALUES (:tittle, :id_developer, :id_publisher, :release_date, :price, :time_to_finish, :id_difficulty)";
                                     
                 $insert_videogame_genders = "INSERT INTO tgame_genders (id_videogame, id_gender) VALUES (:id_videogame, :id_gender)";
-
-
+                $insert_videogame_platforms = "INSERT INTO tgame_platforms (id_videogame, id_platform) VALUES (:id_videogame, :id_platform)";
 
                 $queryExecution = $this -> conn -> prepare($insert_videogame);
                 $queryExecution -> execute([
@@ -184,7 +186,7 @@
                 
                 
             } catch(PDOException $e) {
-                return ['success' => false, 'message' => "Error inserting the game: " . $e -> getMessage()];
+                APIResponse::serverError("Error inserting the game: " . $e -> getMessage());
             }
         }
 
