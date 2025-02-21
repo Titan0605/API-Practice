@@ -30,14 +30,14 @@
             }
         }
 
-        public function getDeveloperWithId ($id) {
+        public function getDeveloperWithId (int $id) {
             $query = "SELECT developer_name FROM tdevelopers WHERE id_developer = :id AND active = 1";
             try {
                 $result = $this -> conn -> prepare($query);
                 $result -> execute([
                     'id' => $id
                 ]);
-                return $result -> fetchAll(PDO::FETCH_ASSOC);
+                return $result -> fetch(PDO::FETCH_ASSOC);
             } catch(PDOException $e) {
                 echo "Error in SELECT" . $e -> getMessage();
             }

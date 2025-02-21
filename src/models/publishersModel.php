@@ -30,14 +30,14 @@
             }
         }
 
-        public function getPublisherWithId ($id) {
+        public function getPublisherWithId (int $id) {
             $query = "SELECT publisher_name FROM tpublishers WHERE id_publisher = :id AND active = 1";
             try {
                 $result = $this -> conn -> prepare($query);
                 $result -> execute([
                     'id' => $id
                 ]);
-                return $result -> fetchAll(PDO::FETCH_ASSOC);
+                return $result -> fetch(PDO::FETCH_ASSOC);
             } catch(PDOException $e) {
                 echo "Error in SELECT" . $e -> getMessage();
             }

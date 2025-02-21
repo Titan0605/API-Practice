@@ -26,7 +26,7 @@
         public function getVideogames() {
             $selectVideogameGenders = "SELECT id_gender FROM tgame_genders WHERE id_videogame = :id AND active = 1";
             $selectVideogamePlatforms = "SELECT id_platform FROM tgame_platforms WHERE id_videogame = :id AND active = 1";
-            $selectVideogames = "SELECT * FROM tvideogames";
+            $selectVideogames = "SELECT * FROM tvideogames WHERE active = 1";
             $result = $this -> conn -> query($selectVideogames);
             $games = $result -> fetchAll(PDO::FETCH_ASSOC);
             $gamesWithAllInfo = [];
@@ -53,49 +53,147 @@
                     foreach($gendersIds as $genderId){
                         try {
                             $gender = $this -> genderModel -> getGenderWithId($genderId['id_gender']);
-                            $genders[] = $gender[0]['gender_description'];
+                            $genders[] = $gender['gender_description'];
                         } catch (Exception $e) {
-                            echo "Error in SELECT: " , $e -> getMessage();
+                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
                         }
                     }
 
                     foreach($platformsIds as $platformId){
                         try {
                             $platform = $this -> platformModel -> getPlatformWithId($platformId['id_platform']);
-                            $platforms[] = $platform[0]['platform_name'];
+                            $platforms[] = $platform['platform_name'];
                         } catch (Exception $e) {
-                            echo "Error in SELECT: " , $e -> getMessage();
+                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
                         }
                     }
 
-                    $game['developer'] = $developer[0]['developer_name'];
-                    $game['publisher'] = $publisher[0]['publisher_name'];
-                    $game['difficulty'] = $difficulty[0]['difficult_description'];
+                    $game['developer'] = $developer['developer_name'];
+                    $game['publisher'] = $publisher['publisher_name'];
+                    $game['difficulty'] = $difficulty['difficult_description'];
                     $game['genders'] = $genders;
                     $game['platforms'] = $platforms;
 
                     $gamesWithAllInfo[] = $game;
                 } catch (Exception $e) {
-                    echo "Error processing game ID {$gameId}: " . $e -> getMessage();
+                    return ['success' => false, 'message' => "Error processing game ID {$gameId}: " . $e -> getMessage()];
                 }
             }
+
             if($gamesWithAllInfo === []){
-                $gamesWithAllInfo[] = "There are not Data";
-                return $gamesWithAllInfo;
+                return ['success' => false, 'message' => "There is no data"];
             } else {
                 return $gamesWithAllInfo;
             }
+            
         }
 
-        public function insertVideogame() {
+        public function getVideogameWithId(int $id) {
+            $select_videogame_genders = "SELECT id_gender FROM tgame_genders WHERE id_videogame = :id AND active = 1";
+            $select_videogame_platforms = "SELECT id_platform FROM tgame_platforms WHERE id_videogame = :id AND active = 1";
+            $select_videogame = "SELECT * FROM tvideogames WHERE id_videogame = :id AND active = 1";
+
+            $result = $this -> conn -> prepare($select_videogame);
+            $result -> execute([
+                'id' => $id
+            ]);
+
+            $game = $result -> fetch(PDO::FETCH_ASSOC);
+            $gamesWithAllInfo = [];
+
+            if ($game){
+                try {
+                    var_dump($game);
+                    $gameId = $game['id_videogame'];
+                    $developer = $this -> developerModel -> getDeveloperWithId($game['id_developer']);
+                    $publisher = $this -> publisherModel -> getPublisherWithId($game['id_publisher']);
+                    $difficulty = $this -> difficultyModel -> getDifficultyWithId($game['id_difficulty']);
+                    $genders = [];
+                    $platforms = [];
+
+                    $gendersIds = $this -> conn -> prepare($select_videogame_genders);
+                    $gendersIds -> execute([
+                        'id' => $id
+                    ]);
+
+                    $platformsIds = $this -> conn -> prepare($select_videogame_platforms);
+                    $platformsIds -> execute([
+                        'id' => $id
+                    ]);
+                    
+                    foreach($gendersIds as $genderId){
+                        try {
+                            $gender = $this -> genderModel -> getGenderWithId($genderId['id_gender']);
+                            $genders[] = $gender['gender_description'];
+                        } catch (Exception $e) {
+                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
+                        }
+                    }
+
+                    foreach($platformsIds as $platformId){
+                        try {
+                            $platform = $this -> platformModel -> getPlatformWithId($platformId['id_platform']);
+                            $platforms[] = $platform['platform_name'];
+                        } catch (Exception $e) {
+                            return ['success' => false, 'message' => "Error in SELECT: " , $e -> getMessage()];
+                        }
+                    }
+
+                    $game['developer'] = $developer['developer_name'];
+                    $game['publisher'] = $publisher['publisher_name'];
+                    $game['difficulty'] = $difficulty['difficult_description'];
+                    $game['genders'] = $genders;
+                    $game['platforms'] = $platforms;
+
+                    $gamesWithAllInfo[] = $game;
+                } catch (Exception $e) {
+                    return ['success' => false, 'message' => "Error processing game ID {$gameId}: " . $e -> getMessage()];
+                }
+
+                if($gamesWithAllInfo === []){
+                    return ['success' => false, 'message' => "There is no data"];
+                } else {
+                    return $gamesWithAllInfo;
+                }
+
+            } else {
+                return ['success' => false, 'message' => "There is no videogame with the id: $id"];
+            }
+        }
+        
+        //PENDENT FUNCTION TO INSERT A VIDEOGAME (NEED FIRST FUNCTION FORM THE OTHER TABLES)
+        public function insertVideogame($tittle, $id_developer, $id_publisher, $release_date, $price, $time_to_finish, $id_difficulty, $genders, $platforms) {
             try {
-                $insertVideogame = "INSERT INTO tvideogames (tittle, id_developer, id_publisher, release_date, price, time_to_finish, id_difficulty)
+                $insert_videogame = "INSERT INTO tvideogames (tittle, id_developer, id_publisher, release_date, price, time_to_finish, id_difficulty)
                                     VALUES (:tittle, :id_developer, :id_publisher, :release_date, :price, :time_to_finish, :id_difficulty)";
+                                    
+                $insert_videogame_genders = "INSERT INTO tgame_genders (id_videogame, id_gender) VALUES (:id_videogame, :id_gender)";
+
+
+
+                $queryExecution = $this -> conn -> prepare($insert_videogame);
+                $queryExecution -> execute([
+                    'tittle' => $tittle, 
+                    'id_developer' => $id_developer,
+                    'id_publisher' => $id_publisher,
+                    'release_date' => $release_date,
+                    'price' => $price,
+                    'time_to_finish' => $time_to_finish,
+                    'id_difficulty' => $id_difficulty
+                ]);
                 
                 
             } catch(PDOException $e) {
-                echo "Error inserting the game: " . $e -> getMessage();
+                return ['success' => false, 'message' => "Error inserting the game: " . $e -> getMessage()];
             }
+        }
+
+        public function updateVideogame(int $id) {
+
+        }
+
+        public function deleteVideogame(int $id) {
+            
         }
     }
 ?>

@@ -30,14 +30,14 @@
             }
         }
 
-        public function getPlatformWithId ($id) {
+        public function getPlatformWithId (int $id) {
             $query = "SELECT platform_name FROM tplatforms WHERE id_platform = :id AND active = 1";
             try {
                 $result = $this -> conn -> prepare($query);
                 $result -> execute([
                     'id' => $id
                 ]);
-                return $result -> fetchAll(PDO::FETCH_ASSOC);
+                return $result -> fetch(PDO::FETCH_ASSOC);
             } catch(PDOException $e) {
                 echo "Error in SELECT" . $e -> getMessage();
             }

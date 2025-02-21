@@ -30,14 +30,14 @@
             }
         }
 
-        public function getDifficultyWithId ($id) {
+        public function getDifficultyWithId (int $id) {
             $query = "SELECT difficult_description FROM tdifficulties WHERE id_difficulty = :id AND active = 1";
             try {
                 $result = $this -> conn -> prepare($query);
                 $result -> execute([
                     'id' => $id
                 ]);
-                return $result -> fetchAll(PDO::FETCH_ASSOC);
+                return $result -> fetch(PDO::FETCH_ASSOC);
             } catch(PDOException $e) {
                 echo "Error in SELECT" . $e -> getMessage();
             }
