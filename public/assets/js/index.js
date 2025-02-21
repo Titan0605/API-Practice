@@ -1,1 +1,3 @@
-let table = new DataTable('#videogameTable');
+$(document).ready(function () {
+    $('#videogameTable').DataTable();
+});

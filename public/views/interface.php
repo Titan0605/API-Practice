@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- DATATABLES -->
-    <link rel="stylesheet" href="../assets/css/datatable.min.css">
-    <!-- JQUERY -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css"/>
     <title>Videogames</title>
 </head>
 <body>
-    <table id="videogameTable" class="table">
+    <table id="videogameTable" class="display" style="width:100%">
         <thead>
             <tr>
                 <th>Tittle</th>
@@ -33,9 +32,12 @@
             </tr>
         </tbody>
     </table>
-
-    <script src="../assets/js/datatable.min.js" ></script>
-    <script src="../assets/js/jQuery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="../assets/js/index.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#videogameTable').DataTable();
+        });
+    </script>
 </body>
 </html>
