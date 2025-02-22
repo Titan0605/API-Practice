@@ -18,7 +18,7 @@
                 break;
 
             case 'videogames': //Checking if the endpoint is /videogames
-                $id = $uriParts[2] ?? null; //Get and save a specific id from the URI, for example: "localhost/videogames/54", and if it isn't anything in the URI it save a null
+                $id = is_numeric($uriParts[2]) ? $uriParts[2] : null; //Get and save a specific id from the URI, for example: "localhost/videogames/54", and if it isn't anything in the URI it save a null
 
                 $videogame = new VideogameController(); //Making a new object with the class VideogameController()
                 $videogame -> processRequest($_SERVER["REQUEST_METHOD"], $id); //We call the function of the object $controller to procces a request to the API and the id that it was saved
@@ -26,6 +26,7 @@
 
             default:
                 APIResponse::notFound('Invalid API endpoint');
+                break;
         }
 
     } catch (Exception $e) {
