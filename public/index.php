@@ -25,7 +25,7 @@
                 break;
 
             default:
-                APIResponse::notFound('Invalid API endpoint');
+                APIResponse::notFound('Invalid API endpoint'); //returning an error if the user put an invalid endpoint diferent of /videogames
                 break;
         }
 

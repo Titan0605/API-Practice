@@ -1,6 +1,6 @@
 <?php
 class APIResponse {
-    private static function sendResponse($statusCode, $success, $message = '', $data = null) {
+    private static function sendResponse($statusCode, $success, $message = '', $data = null) { //base function to make a response to the user
         http_response_code($statusCode);
         
         $response = [
@@ -20,6 +20,7 @@ class APIResponse {
         exit;
     }
 
+    //Adding all the status the API it will use, usign the base function sendRequest
     public static function success($data = null, $message = 'Success') {
         self::sendResponse(200, true, $message, $data);
     }
