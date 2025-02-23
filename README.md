@@ -24,7 +24,7 @@
 ```
     <VirtualHost *:80>
     DocumentRoot "C:/xampp/htdocs/api-practice/public"
-    ServerName [apipractice.com](http://apipractice.com/)
+    ServerName apipractice.com
     </VirtualHost>
 ```
 3. Add the new virtualhost to Windows domains(This will let us call the API from other project in the PC).
