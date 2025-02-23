@@ -5,9 +5,6 @@
 
 ## ***Tools used***
 - PHP
-- Javascript
-- HTML
-- CSS
 - MySQL (XAMPP)
 
 ---
