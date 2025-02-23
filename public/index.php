@@ -1,73 +1,35 @@
-<main>
-    <?php
-        // header("Content-Type: application/json");
-        // header("Accept-Charset: UTF-8");
-        // header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+<?php
+    header("Content-Type: application/json"); //Header to say the type of content we are using (JSON)
+    header("Accept-Charset: UTF-8"); //Header to accept text in "UTF-8"
+    header("Access-Control-Allow-Origin: *"); //Header to lend requests form any domain (*)
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE"); //Header to specify the methods which the API is using
+    header("Access-Control-Allow-Headers: Content-Type"); //Header to specify the headers that can be used in a request
 
-        include 'DB_Connection.php'; // Include the database connection file
-        
-        // Function to handle videogames data
-        function getVideogames(){
-            // $data = "videogames.json"; // JSON file containing videogames data
-            $conn = getDBConnection(); // Get the database connection
-            $server = $_SERVER["REQUEST_METHOD"]; // Get the request method (GET, POST, PUT, DELETE)
-            
-            // Handle different request methods
-            switch($server){
-                case "GET":
-                    // Handle GET request
-                    // LAST VERSION - USING DATABASE
-                    $videogames = []; // Array to store videogames data
-                    $query = "SELECT * FROM videojuegos"; // SQL query to get all videogames
+    require_once "../src/controllers/videogameController.php"; // Requiring the file videogameController to get the class VideogameController()
+    require_once "../src/controllers/apiController.php";
 
-                    $result = $conn -> query($query); // Execute the query
-                    foreach($result as $row){
-                        $videogames[] = $row;
-                    } // Fetch all rows as an associative array
-                    echo json_encode($videogames); // Return videogames data as JSON
-                    break;
-                case "POST":
-                    // Handle POST request
-                    $nombre = $_POST['tittle'];
-                    $developer = $_POST['developer'];
-                    $precio = $_POST['price'];
+    // Getting the parts of the URI that is used in a request, starting in index, then dividing it for each "/" and write them in an Array
+    $uriParts = explode("/", $_SERVER["REQUEST_URI"]);
 
-                    $insert = "INSERT INTO videojuegos (titulo, desarrollador, precio_valor) VALUES (:name , :developer, :price)";
-                    $respuest = $conn -> prepare($insert);
-                    $respuest -> execute([
-                        'name' => $nombre,    
-                        'developer' => $developer,
-                        'price' => $precio,
-                    ]); // Execute the query
-                    
-                    echo "<p>Request POST</p>";
-                    break;
-                case "PUT":
-                    // Handle PUT request
-                    echo "<p>Request PUT</p>";
-                    break;
-                case "DELETE":
-                    // Handle DELETE request
-                    echo "<p>Request DELETE</p>";
-                    break;
-                default:
-                    // Handle unknown request method
-                    echo "<p>Unknown request method</p>";
-                    break;
-            }
+    try {
+        switch($uriParts[1]) {
+            case '': //Checking if it's the root of the API
+                APIResponse::success(null, 'Welcome to the API'); // Sending a response (200) which means that the URI was find, and welcome the user
+                break;
+
+            case 'videogames': //Checking if the endpoint is /videogames
+                $id = is_numeric($uriParts[2]) ? $uriParts[2] : null; //Get and save a specific id from the URI, for example: "localhost/videogames/54", and if it isn't anything in the URI it save a null
+
+                $videogame = new VideogameController(); //Making a new object with the class VideogameController()
+                $videogame -> processRequest($_SERVER["REQUEST_METHOD"], $id); //We call the function of the object $controller to procces a request to the API and the id that it was saved
+                break;
+
+            default:
+                APIResponse::notFound('Invalid API endpoint'); //returning an error if the user put an invalid endpoint diferent of /videogames
+                break;
         }
-    
-        // Call the function to handle videogames data
-        getVideogames();
-    ?>
-</main>
-<!-- <h1>
-    < echo "Hello World";?>
-</h1> --TESTING-- -->
 
-<style>
-    body{
-        display: grid;
-        place-content: center;
+    } catch (Exception $e) {
+        APIResponse::serverError($e -> getMessage());
     }
-</style>
+?>
