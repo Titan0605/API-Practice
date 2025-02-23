@@ -14,7 +14,7 @@
 
 ## ***STEPS TO FOLLOW BEFORE USE THE API***
 1. **Creat a database in MySQL named "videogames"**
-2. **Import the videogames.sql wich it is in the SQL folder in the database**
+2. **Import the videogames.sql which it is in the SQL folder in the database**
 3. **Move the .zip of this project to "C:\xampp\htdocs" and extract the folders inside it, in a folder call "api-practice" (IF THE FOLDER HAVE OTHER NAME IT WON'T WORK!)**
 4. **You need to create a VirtualHost with Xammp**
  - Add the Vhost in Xampp
